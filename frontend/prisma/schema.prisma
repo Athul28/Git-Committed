@@ -45,6 +45,7 @@ model User {
   type          UserType         @default(Hospital)
   emailVerified DateTime?        @map("email_verified")
   image         String?
+  place String?
   accounts      Account[]
   sessions      Session[]
   requests      Requests[]
