@@ -46,41 +46,43 @@ model User {
   emailVerified DateTime?        @map("email_verified")
   image         String?
   place String?
+  address String?
   accounts      Account[]
   sessions      Session[]
   requests      Requests[]
   shipments     Shipments[]
   location      FacilityLocation?
 
+  inventory Inventory?
+
   @@map("users")
 }
 
 model Inventory {
   id          String   @id @default(cuid())
-  name        String
   description String?
-  quantity    Int
-  price       Float
   items       Item[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("inventory")
 }
 
 model Item {
   id          String   @id @default(cuid())
   name        String
-  category    ItemCategory
+  category    ItemCategory   //Disinfectants,  ppe
   expiryDate  DateTime
-  status      ItemStatus
+  status      ItemStatus    //available, unavailable
   description String?
   price       Float
-  inventoryId String?  @map("inventory_id")
+  inventoryId String  @map("inventory_id")
   shipmentId  String?  @map("shipment_id")
   requestId   String?  @map("request_id")
 
-  inventory   Inventory? @relation(fields: [inventoryId], references: [id])
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
   shipment    Shipments? @relation(fields: [shipmentId], references: [id])
   request     Requests?  @relation(fields: [requestId], references: [id])
 

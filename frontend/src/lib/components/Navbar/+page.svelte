@@ -1,30 +1,40 @@
 <script>
     import { page } from "$app/stores";
-    const user=$page.data.session?.user;
+	import { SignIn, SignOut } from '@auth/sveltekit/components';
+
+    console.log($page.data?.session?.user)
+
 </script>
-<style>
-    .name{
-        background-color: #e83e88;
-        height: 60px;
-        color:white;
-        text-align: center;
-        text-indent: 5px;
-        font-size: 40px;
-        font-weight: bold;
-    }
-    .profile{
-        border-radius: 30px;
-        border-color: black;
-        border-width: 2px;
-        margin-right:8px;
-        margin-bottom: 5px;
-        margin-top: 5px;
-    }
-</style>
-<nav class="border border-black w-full  ">
-    <nav class="name flex justify-between">
-        <p>MedFlow</p>
-        <img src={user?.image} alt='profile' class="profile"/>
+
+
+<nav class="border w-full bg-blue-400 py-3 px-5 text-white">
+    <nav class="flex justify-between items-center">
+        <p class="font-bold text-white text-xl"><a href="/">MedFlow</a></p>
+        <div class="flex space-x-2 items-center">
+
+                {#if $page.data.session}
+                <img src={$page.data?.session?.user?.image} alt='profile-img' class="profile"/>
+                <p><a href="/profile">{$page.data.session?.user?.name}</a></p>
+                
+                <SignOut class="border border-white px-3 py-2 rounded-md hover:bg-[#f9f9f930]">
+                    <div slot="submitButton" class="buttonPrimary">Sign out</div>
+                </SignOut>
+            {:else}
+                <SignIn>
+                    <div slot="submitButton" class="buttonPrimary">Sign in</div>
+                </SignIn>
+            {/if}
+        </div>
     </nav>
     
 </nav>
+
+<style>
+    .profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+</style>

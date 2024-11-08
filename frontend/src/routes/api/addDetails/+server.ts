@@ -3,13 +3,14 @@ import { prisma } from '../../../db/prisma';
 export async function POST({ request }) {
     console.log("Details : ", request);
     try {
-        const { id, name, latitude, longitude } = await request.json();
+        const { id, name, latitude, longitude,address } = await request.json();
         const newDetail = await prisma.user.update({
             where: {
                 email: id
             },
             data: {
                 place: name,
+                address:address,
                 location: {
                     upsert: {
                         create: {
