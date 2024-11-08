@@ -24,7 +24,7 @@
 <nav class="border border-black w-full  ">
     <nav class="name flex justify-between">
         <p>MedFlow</p>
-            <img src={user?.image} alt='profile' class="profile"/>
+        <img src={user?.image} alt='profile' class="profile"/>
     </nav>
     
 </nav>
