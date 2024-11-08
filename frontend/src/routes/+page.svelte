@@ -1,8 +1,10 @@
 <script>
 	import { SignIn, SignOut } from '@auth/sveltekit/components';
 	import { page } from '$app/stores';
+    import Navbar from "../lib/components/Navbar/+page.svelte"
 </script>
 
+<Navbar />
 <h1>SvelteKit Auth Example</h1>
 <div>
 	{#if $page.data.session}
