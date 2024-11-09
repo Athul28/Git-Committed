@@ -21,7 +21,9 @@ export async function POST({ request })  {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+        let inv_id=null;
         if (inventory.inventory==null){
+
 
         const inv = await prisma.inventory.create({
             data: {
@@ -30,11 +32,12 @@ export async function POST({ request })  {
                 }
             }
         });
+        inv_id=inv.id
         }else{
             console.log("Inventory present")
+            inv_id = inventory.inventory ? inventory.inventory.id : null;
         }
 
-        const inv_id = inventory.inventory ? inventory.inventory.id : null;
         if (inv_id === null) {
             return new Response(JSON.stringify({ error: 'Inventory ID not found.' }), {
                 status: 404,
