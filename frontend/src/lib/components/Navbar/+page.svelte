@@ -7,7 +7,7 @@
 </script>
 
 
-<nav class="border w-full bg-blue-400 py-3 px-5 text-white">
+<nav class="border w-full bg-blue-500 py-3 px-5 text-white m-0">
     <nav class="flex justify-between items-center">
         <p class="font-bold text-white text-xl"><a href="/">MedFlow</a></p>
         <div class="flex space-x-2 items-center">

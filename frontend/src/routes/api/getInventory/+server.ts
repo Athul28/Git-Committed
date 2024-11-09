@@ -1,37 +1,39 @@
 import { prisma } from "../../../db/prisma";
 
 export async function GET({ url }) {
-    const id = url.searchParams.get('id');
-    console.log("id : ", id);
+    const email = url.searchParams.get('email');
+    console.log("email: ", email);
 
-    if (!id) {
-        return new Response(JSON.stringify({ error: 'Missing id parameter' }), {
-            status: 400,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
-
-    // Fetch user details from the database using Prisma
-    const userDetails = await prisma.user.findUnique({
-        where: { email: id },
-        include: { location: true } // Include related location data if needed
-    });
-
-    if (!userDetails) {
-        return new Response(JSON.stringify({ error: 'User not found' }), {
-            status: 404,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
-
-    return new Response(JSON.stringify(userDetails), {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/json'
+    const user=await prisma.user.findFirst({
+        where:{
+            email:email
+        },
+        include:{
+            inventory:true
         }
-    });
-}
+    })
+
+    try {
+        if (!user || !user.inventory) {
+            return new Response(JSON.stringify({ error: 'User or inventory not found.' }), { status: 404 });
+        }
+
+        const inventory= await prisma.inventory.findFirst({
+            where: { id: user.inventory.id }
+        });
+
+        if (!inventory) {
+            return new Response(JSON.stringify({ error: 'Inventory not found.' }), { status: 404 });
+        }
+
+        const items=await prisma.item.findMany({
+            where:{inventoryId:inventory.id}
+        })
+
+        console.log(items)
+
+        return new Response(JSON.stringify({ items }), { status: 200 });
+    } catch (error) {
+        return new Response(JSON.stringify({ error: 'An error occurred while fetching inventory items.' }), { status: 500 });
+    }
+};

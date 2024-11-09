@@ -1,23 +1,20 @@
 <script>
-	import { SignIn, SignOut } from '@auth/sveltekit/components';
-	import { page } from '$app/stores';
+	import home from '$lib/assets/home.jpg';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { goto } from '$app/navigation';
 </script>
 
-<!-- <style>
-	.details{
-		text-indent: 5px;
-	}
-	.signedInText{
-  	font-size: 20px;
-	}
-	.notSignedInText{
-  	font-size: 20px;
-	}
-	.buttonPrimary{
-		text-align: center;
-	}
-</style> -->
-
-<div class="mt-40">
-	<p class="text-3xl text-center">A complete solution for Inventory Management</p>
+<div class="mt-32 flex">
+	<div class="pl-20">
+		<p class=" text-[80px]">Revolutionizing Healthcare</p>
+		<p class="text-xl  text-gray-800">
+			Healthcare systems often face critical shortages of essential medical supplies, such as
+			personal protective equipment (PPE), medications, and medical devices, due to sudden surges in
+			demand, supply chain disruptions, or limited availability in certain regions
+		</p>
+		<Button class="bg-blue-500 text-xl mt-10 px-6 py-6 hover:scale-110 transition" on:click={() => { goto('/find'); }}>Explore Solutions</Button>
+	</div>
+	<div>
+		<img src={home} alt="home-image" />
+	</div>
 </div>

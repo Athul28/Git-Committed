@@ -6,7 +6,7 @@
 
 <div>
     <p class="text-3xl font-bold text-center">Maps</p>
-    <div class="border border-black">
+    <div class="">
         <Map />
     </div>
 </div>
