@@ -1,7 +1,7 @@
 # Smart Resource Allocation & Supply Chain Optimization for Healthcare
 
 This project is designed to improve resource allocation and supply chain efficiency in healthcare. The platform allows healthcare facilities and humanitarian organizations to manage, track, and optimize the distribution of essential resources, especially during critical times.
-
+![alt text](image.png)
 ## Features
 
 - **Real-time Resource Tracking**: Monitor and update inventory levels in real time.
@@ -9,7 +9,7 @@ This project is designed to improve resource allocation and supply chain efficie
 - **Resource Allocation**: Dynamic allocation of resources based on need and supply availability.
 - **Google Authentication**: Secure user access with Google Auth API for a streamlined login experience.
 - **Data Management with Prisma**: Efficient data storage and retrieval using Prisma ORM with a CockroachDB database.
-
+![alt text](image-1.png)
 ## Technology Stack
 
 - **Frontend**: Svelte with Tailwind CSS for a responsive UI.
