@@ -1,25 +1,20 @@
 <script>
-	import { SignIn, SignOut } from '@auth/sveltekit/components';
-	import { page } from '$app/stores';
+	import home from '$lib/assets/home.jpg';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { goto } from '$app/navigation';
 </script>
 
-<h1>SvelteKit Auth Example</h1>
-<div>
-	{#if $page.data.session}
-		{#if $page.data.session.user?.image}
-			<img src={$page.data.session.user.image} class="avatar" alt="User Avatar" />
-		{/if}
-		<span class="signedInText">
-			<small>Signed in as</small><br />
-			<strong>{$page.data.session.user?.name ?? 'User'}</strong>
-		</span>
-		<SignOut>
-			<div slot="submitButton" class="buttonPrimary">Sign out</div>
-		</SignOut>
-	{:else}
-		<span class="notSignedInText">You are not signed in</span>
-		<SignIn>
-			<div slot="submitButton" class="buttonPrimary">Sign in</div>
-		</SignIn>
-	{/if}
+<div class="mt-32 flex">
+	<div class="pl-20">
+		<p class=" text-[80px]">Revolutionizing Healthcare</p>
+		<p class="text-xl  text-gray-800">
+			Healthcare systems often face critical shortages of essential medical supplies, such as
+			personal protective equipment (PPE), medications, and medical devices, due to sudden surges in
+			demand, supply chain disruptions, or limited availability in certain regions
+		</p>
+		<Button class="bg-blue-500 text-xl mt-10 px-6 py-6 hover:scale-110 transition" on:click={() => { goto('/find'); }}>Explore Solutions</Button>
+	</div>
+	<div>
+		<img src={home} alt="home-image" />
+	</div>
 </div>
