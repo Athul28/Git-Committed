@@ -2,10 +2,7 @@
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { page } from '$app/stores';
-  import Button from '../ui/button/button.svelte';
-  import { Toast, toaster } from '@svelte-kit/svelte-toast';
-
-
+	import Button from '../ui/button/button.svelte';
 
 	let items: {
 		name: string;
@@ -217,23 +214,21 @@
 		}
 	};
 
+	let showOrderForm = false;
+	let orderDetails = {
+		name: '',
+		item: '',
+		quantity: 1
+	};
 
-
-  let showOrderForm = false;
-  let orderDetails = {
-    name: '',
-    item: '',
-    quantity: 1,
-  };
-
-  function submitOrder() {
-    console.log('Order submitted:', orderDetails);
-    // Add your order submission logic here
-    showOrderForm = false;
-    orderDetails.name=''
-    orderDetails.item=''
-    orderDetails.quantity=1
-  }
+	function submitOrder() {
+		console.log('Order submitted:', orderDetails);
+		// Add your order submission logic here
+		showOrderForm = false;
+		orderDetails.name = '';
+		orderDetails.item = '';
+		orderDetails.quantity = 1;
+	}
 </script>
 
 <!-- HTML for the search box and map container -->
@@ -241,7 +236,7 @@
 <div id="map" bind:this={mapElement}></div>
 
 <!-- List nearby locations -->
-<h3 class="text-center text-2xl mt-2 font-bold">Nearby Locations</h3>
+<h3 class="mt-2 text-center text-2xl font-bold">Nearby Locations</h3>
 <div class="location-list flex flex-wrap justify-center">
 	{#each $nearbyLocations as location (location.name)}
 		<div
@@ -259,20 +254,20 @@
 					position: { lat: location.lat, lng: location.lng }
 				});
 				infoWindow.open(map, marker);
-        orderDetails.name=location.name
+				orderDetails.name = location.name;
 			}}
 			on:keydown={(e) => e.key === 'Clicked' && centerMapOnLocation(location)}
 		>
 			<p class="font-bold">{location.name} - <span>{location.rating}</span></p>
 			{#if getRandomNumberInRange() >= 6}
 				<div class="flex">
-					<p class="text-green-500 font-bold">AVAILABLE</p>
+					<p class="font-bold text-green-500">AVAILABLE</p>
 					<div>
 						<p>
 							- > [
 							{#each items as item}
-								{#if item.status != 'Unavailable'}
-									{item.name}, 
+								{#if item.status == 'Unavailable'}
+									{item.name},
 								{/if}
 							{/each}
 							]
@@ -286,93 +281,99 @@
 	{/each}
 </div>
 
-<Button class="fixed bottom-10 text-xl py-6 hover:scale-105 transition px-5 right-10" on:click={() => showOrderForm = true}>Order Now</Button>
+<Button
+	class="fixed bottom-10 right-10 px-5 py-6 text-xl transition hover:scale-105"
+	on:click={() => (showOrderForm = true)}>Order Now</Button
+>
 <!-- Order Now Popup Form -->
 {#if showOrderForm}
-  <div class="order-form-overlay">
-    <div class="order-form">
-      <h2 class="text-center text-2xl font-bold mb-4">Order Now</h2>
-      <form on:submit|preventDefault={submitOrder}>
-        <div class="form-group">
-          <label for="name">Name:</label>
-          <input type="text" id="name" bind:value={orderDetails.name} required />
-        </div>
-        <div class="form-group">
-          <label for="item">Item:</label>
-            <select id="item" bind:value={orderDetails.item} required>
-            <option value="" disabled selected>Select an item</option>
-            {#each items as item}
-              <option value={item.name}>{item.name}</option>
-            {/each}
-            </select>
-        </div>
-        <div class="form-group">
-          <label for="quantity">Quantity:</label>
-          <input type="number" id="quantity" bind:value={orderDetails.quantity} min="1" required />
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Submit Order</button>
-          <button type="button" class="btn btn-secondary" on:click={() => showOrderForm = false}>Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
+	<div class="order-form-overlay">
+		<div class="order-form">
+			<h2 class="mb-4 text-center text-2xl font-bold">Order Now</h2>
+			<form on:submit|preventDefault={submitOrder}>
+				<div class="form-group">
+					<label for="name">Name:</label>
+					<input type="text" id="name" bind:value={orderDetails.name} required />
+				</div>
+				<div class="form-group">
+					<label for="item">Item:</label>
+					<select id="item" bind:value={orderDetails.item} required>
+						<option value="" disabled selected>Select an item</option>
+						{#each items as item}
+							{#if item.status == 'Unavailable'}
+								<option value={item.name}>{item.name}</option>
+							{/if}
+						{/each}
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="quantity">Quantity:</label>
+					<input type="number" id="quantity" bind:value={orderDetails.quantity} min="1" required />
+				</div>
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary">Submit Order</button>
+					<button type="button" class="btn btn-secondary" on:click={() => (showOrderForm = false)}
+						>Cancel</button
+					>
+				</div>
+			</form>
+		</div>
+	</div>
 {/if}
 
-
 <style>
-  .order-form-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  .order-form {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  .form-group {
-    margin-bottom: 15px;
-  }
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  .form-actions {
-    display: flex;
-    justify-content: space-between;
-  }
-  .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .btn-primary {
-    background: #007bff;
-    color: white;
-  }
-  .btn-secondary {
-    background: #6c757d;
-    color: white;
-  }
+	.order-form-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 1000;
+	}
+	.order-form {
+		background: white;
+		padding: 20px;
+		border-radius: 8px;
+		width: 400px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	}
+	.form-group {
+		margin-bottom: 15px;
+	}
+	.form-group label {
+		display: block;
+		margin-bottom: 5px;
+	}
+	.form-group input,
+	.form-group select,
+	.form-group textarea {
+		width: 100%;
+		padding: 8px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+	.form-actions {
+		display: flex;
+		justify-content: space-between;
+	}
+	.btn {
+		padding: 10px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+	}
+	.btn-primary {
+		background: #007bff;
+		color: white;
+	}
+	.btn-secondary {
+		background: #6c757d;
+		color: white;
+	}
 	#map {
 		width: 100%;
 		height: 600px;
